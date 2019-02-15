@@ -20,39 +20,43 @@ class SingleWave extends Component {
   }
 
   animate = () => {
-    var component = this;
     var period = 40;
     var count = period * 3;
     var dx = (2*Math.PI / period);
     var amplitude = 20;
     var intervalId = setInterval(function(){
-      component.setState({'ys':component.calc(dx, amplitude, count)});
-    },25)
-    component.setState({intervalId:intervalId});
+      this.setState({'ys':this.calc(dx, amplitude, count)});
+    }.bind(this),40)
+    this.setState({intervalId:intervalId});
   }
 
   calc = (dx, amplitude, count) => {
-    var component = this;
     var ys = [];
+    let x = this.state.x
     for (var i = 0; i <=count; i++){
-      ys.push(Math.sin(component.state.x) * amplitude);
-      component.state.x += dx;
+      ys.push(Math.sin(x) * amplitude);
+      x += dx; 
     }
-    return ys;
+
+    // This might be the key to iteration! 
+    this.setState({
+      x : x
+    })
+    return ys; 
   }
 
   render(){
-    let { top } = this.state;
+    let { top, ys } = this.state;
 
     return(
       <div className='loader'>
         {
-          this.state.ys.map(function(y, x){
-
+          ys.map(function(y, index){
             return (
               <div>
                 <div style={{
-                  'top':y + top + 'vh'
+                  'top':y + top + 'vh',
+                  'background' : (index == 0) ? '#33ccff' : 'yellow'
                 }}></div>
               </div>
             )
