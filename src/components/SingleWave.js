@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 
+const period = 40;
+const count = period * 3;
+const dx = (2*Math.PI / period);
+const amplitude = 20;
 
 class SingleWave extends Component {
 
   state = {
     'top':30,
-    ys:[],
+    fx:[],
     x: 1,
-    intervalId: null
+    intervalId: null,
+    pause: false 
   }
 
   componentDidMount = () => {
@@ -20,48 +25,54 @@ class SingleWave extends Component {
   }
 
   animate = () => {
-    var period = 40;
-    var count = period * 3;
-    var dx = (2*Math.PI / period);
-    var amplitude = 20;
-    var intervalId = setInterval(function(){
-      this.setState({'ys':this.calc(dx, amplitude, count)});
-    }.bind(this),40)
-    this.setState({intervalId:intervalId});
+    if(this.state.intervalId){
+      clearInterval(this.state.intervalId);
+    }
+    this.setState({
+      intervalId: setInterval(function(){
+        this.setState({'fx':this.calculate(dx, amplitude, count)});
+      }.bind(this),40) 
+    })
   }
 
-  calc = (dx, amplitude, count) => {
-    var ys = [];
+  calculate = (dx, amplitude, count) => {
+    var fx = [];
     let x = this.state.x
     for (var i = 0; i <=count; i++){
-      ys.push(Math.sin(x) * amplitude);
+      console.log('from calculate', x)
+      fx.push(Math.sin(x) * amplitude);
       x += dx; 
     }
-
-    // This might be the key to iteration! 
     this.setState({
       x : x
     })
-    return ys; 
+    return fx; 
   }
 
   render(){
-    let { top, ys } = this.state;
+    let { top, fx } = this.state;
 
     return(
-      <div className='loader'>
-        {
-          ys.map(function(y, index){
-            return (
-              <div>
-                <div style={{
-                  'top':y + top + 'vh',
-                  'background' : (index == 0) ? '#33ccff' : 'yellow'
-                }}></div>
-              </div>
-            )
-          })
-        }
+      <div className="wave-container">
+        <div className="buttons-container">
+          <button onClick={()=>{clearInterval(this.state.intervalId)}}> Stop </button>
+          <button onClick={()=>{this.animate()}}> Run </button>
+          <button onClick={()=>{this.setState({'fx':this.calculate(dx, amplitude, count)})}}> Increment </button>
+        </div>
+        <div className='loader'>
+          {
+            fx.map(function(y, index){
+              return (
+                <div>
+                  <div style={{
+                    'top':y + top + 'vh',
+                    'background' : (index == 0) ? '#33ccff' : 'yellow'
+                  }}></div>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     )
 
