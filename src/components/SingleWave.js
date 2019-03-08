@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 
+const period = 40;
+const count = period * 3;
+const dx = (2*Math.PI / period);
+const amplitude = 20;
 
 class SingleWave extends Component {
 
   state = {
     'top':30,
-    ys:[],
+    fx:[],
     x: 1,
-    intervalId: null
+    intervalId: null,
+    pause: false 
   }
 
   componentDidMount = () => {
@@ -19,50 +24,86 @@ class SingleWave extends Component {
     clearInterval(this.state.intervalId);
   }
 
+  // Currently under works. 
+  // initialize = () => {
+  //   let x = this.state.x;
+  //   var data = new Queue();
+  //   for (var i = 0; i<= count; i++){
+  //     data.add(Math.sin(x) * amplitude);
+  //     data.remove();
+  //   }
+  // }
+
   animate = () => {
-    var component = this;
-    var period = 40;
-    var count = period * 3;
-    var dx = (2*Math.PI / period);
-    var amplitude = 20;
-    var intervalId = setInterval(function(){
-      component.setState({'ys':component.calc(dx, amplitude, count)});
-    },25)
-    component.setState({intervalId:intervalId});
+    if(this.state.intervalId){
+      clearInterval(this.state.intervalId);
+    }
+    this.setState({
+      intervalId: setInterval(function(){
+        this.setState({'fx':this.calculate(dx, amplitude, count)});
+      }.bind(this),40) 
+    })
   }
 
-  calc = (dx, amplitude, count) => {
-    var component = this;
-    var ys = [];
-    for (var i = 0; i <=count; i++){
-      ys.push(Math.sin(component.state.x) * amplitude);
-      component.state.x += dx;
+  stackIncrement = () => {
+    let { fx, top } = this.state;
+    for(let index = 0; index <= count; index++) {
+      let y = fx.pop();
+      console.log(fx);
+      return(
+          <div>
+            <div style={{
+              'top':y + top + 'vh',
+              'background' : (index == 0) ? '#33ccff' : 'yellow'
+            }}></div>
+          </div>
+      )
     }
-    return ys;
+  }
+
+  calculate = (dx, amplitude, count) => {
+    var fx = [];
+    let x = this.state.x
+    for (var i = 0; i <=count; i++){
+      fx.push(Math.sin(x) * amplitude);
+      x += dx; 
+    }
+    this.setState({
+      x : x
+    })
+    return fx; 
   }
 
   render(){
-    let { top } = this.state;
+    let { top, fx } = this.state;
 
     return(
-      <div className='loader'>
-        {
-          this.state.ys.map(function(y, x){
+      <div className="wave-container">
+        <div className="buttons-container">
+          <button onClick={()=>{clearInterval(this.state.intervalId)}}> Stop </button>
+          <button onClick={()=>{this.animate()}}> Run </button>
+          <button onClick={()=>{this.setState({'fx':this.calculate(dx, amplitude, count)})}}> Increment </button>
+        </div>
+        <div className='loader'>
+          {
 
-            return (
-              <div>
-                <div style={{
-                  'top':y + top + 'vh'
-                }}></div>
-              </div>
-            )
-          })
-        }
+
+          // this.stackIncrement()
+            fx.reverse().map(function(y, index){
+              return (
+                <div>
+                  <div style={{
+                    'top':y + top + 'vh',
+                    'background' : (index == 0) ? '#33ccff' : 'yellow'
+                  }}></div>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     )
-
   }
 }
-
 
 export default SingleWave

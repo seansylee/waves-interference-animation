@@ -19,6 +19,8 @@ body{
   display:flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-left: 15%;
+  margin-right: 15%
 }
 .loader > div {
   position:relative;
@@ -26,7 +28,22 @@ body{
 .loader > div > div{
 	width: 0.5vw;
   height: 0.5vw;
-  background: yellow;
+  /* background: yellow; */
   border-radius: 100%;
 	position: absolute;
+}
+
+.wave-container{
+  margin-top: 10%;
+}
+
+.buttons-container{
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  margin: auto;
+}
+
+button{
+  height: 30px;
 }
