@@ -24,6 +24,16 @@ class SingleWave extends Component {
     clearInterval(this.state.intervalId);
   }
 
+  // Currently under works. 
+  // initialize = () => {
+  //   let x = this.state.x;
+  //   var data = new Queue();
+  //   for (var i = 0; i<= count; i++){
+  //     data.add(Math.sin(x) * amplitude);
+  //     data.remove();
+  //   }
+  // }
+
   animate = () => {
     if(this.state.intervalId){
       clearInterval(this.state.intervalId);
@@ -35,11 +45,26 @@ class SingleWave extends Component {
     })
   }
 
+  stackIncrement = () => {
+    let { fx, top } = this.state;
+    for(let index = 0; index <= count; index++) {
+      let y = fx.pop();
+      console.log(fx);
+      return(
+          <div>
+            <div style={{
+              'top':y + top + 'vh',
+              'background' : (index == 0) ? '#33ccff' : 'yellow'
+            }}></div>
+          </div>
+      )
+    }
+  }
+
   calculate = (dx, amplitude, count) => {
     var fx = [];
     let x = this.state.x
     for (var i = 0; i <=count; i++){
-      console.log('from calculate', x)
       fx.push(Math.sin(x) * amplitude);
       x += dx; 
     }
@@ -61,7 +86,10 @@ class SingleWave extends Component {
         </div>
         <div className='loader'>
           {
-            fx.map(function(y, index){
+
+
+          // this.stackIncrement()
+            fx.reverse().map(function(y, index){
               return (
                 <div>
                   <div style={{
@@ -75,9 +103,7 @@ class SingleWave extends Component {
         </div>
       </div>
     )
-
   }
 }
-
 
 export default SingleWave
