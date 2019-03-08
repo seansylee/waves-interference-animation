@@ -71,22 +71,22 @@ class SingleWave extends Component {
     //   x += dx; 
     // }
     fx.push(Math.sin(x) * amplitude)
-    if(fx.length > count){
-      fx.upshift();
+    console.log(fx.length, count)
+
+    if(fx.length >= count){
+      fx.shift();
     }
+    console.log('AFTER UNSHIFT', fx.length, count)
     this.setState({
+      x: x + dx,
       fx: fx
-    })
-    x += dx
-    this.setState({
-      x : x
     })
     // return fx; 
   }
 
   render(){
     let { top, fx } = this.state;
-
+    console.log(fx);
     return(
       <div className="wave-container">
         <div className="buttons-container">
@@ -98,7 +98,6 @@ class SingleWave extends Component {
           {
           // this.stackIncrement()
             fx.map(function(y, index){
-              console.log(fx);
               return (
                 <div>
                   <div style={{
