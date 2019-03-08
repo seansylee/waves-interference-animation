@@ -38,10 +38,13 @@ class SingleWave extends Component {
     if(this.state.intervalId){
       clearInterval(this.state.intervalId);
     }
+    // this.setState({
+    //   intervalId: setInterval(function(){
+    //     this.setState({'fx':this.calculate(dx, amplitude, count)});
+    //   }.bind(this),40) 
+    // })
     this.setState({
-      intervalId: setInterval(function(){
-        this.setState({'fx':this.calculate(dx, amplitude, count)});
-      }.bind(this),40) 
+      intervalId: setInterval( () => this.calculate(dx, amplitude, count), 40)
     })
   }
 
@@ -62,16 +65,23 @@ class SingleWave extends Component {
   }
 
   calculate = (dx, amplitude, count) => {
-    var fx = [];
-    let x = this.state.x
-    for (var i = 0; i <=count; i++){
-      fx.push(Math.sin(x) * amplitude);
-      x += dx; 
+    let { x, fx }= this.state
+    // for (var i = 0; i <=count; i++){
+    //   fx.push(Math.sin(x) * amplitude);
+    //   x += dx; 
+    // }
+    fx.push(Math.sin(x) * amplitude)
+    if(fx.length > count){
+      fx.upshift();
     }
+    this.setState({
+      fx: fx
+    })
+    x += dx
     this.setState({
       x : x
     })
-    return fx; 
+    // return fx; 
   }
 
   render(){
@@ -86,10 +96,9 @@ class SingleWave extends Component {
         </div>
         <div className='loader'>
           {
-
-
           // this.stackIncrement()
-            fx.reverse().map(function(y, index){
+            fx.map(function(y, index){
+              console.log(fx);
               return (
                 <div>
                   <div style={{
