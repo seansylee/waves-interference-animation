@@ -10,13 +10,20 @@ class SingleWave extends Component {
   state = {
     'top':30,
     fx:[],
-    x: 1,
+    x: 0,
     intervalId: null,
     pause: false 
   }
 
   componentDidMount = () => {
     console.log('WAVES MOUNTED ')
+    let fx = []
+    for(var i = 0; i <= count; i++){
+      fx.push(0);
+    }
+    this.setState({
+      fx:fx
+    })
     this.animate();
   }
 
@@ -38,10 +45,13 @@ class SingleWave extends Component {
     if(this.state.intervalId){
       clearInterval(this.state.intervalId);
     }
+    // this.setState({
+    //   intervalId: setInterval(function(){
+    //     this.setState({'fx':this.calculate(dx, amplitude, count)});
+    //   }.bind(this),40) 
+    // })
     this.setState({
-      intervalId: setInterval(function(){
-        this.setState({'fx':this.calculate(dx, amplitude, count)});
-      }.bind(this),40) 
+      intervalId: setInterval( () => this.calculate(dx, amplitude, count), 40)
     })
   }
 
@@ -62,21 +72,28 @@ class SingleWave extends Component {
   }
 
   calculate = (dx, amplitude, count) => {
-    var fx = [];
-    let x = this.state.x
-    for (var i = 0; i <=count; i++){
-      fx.push(Math.sin(x) * amplitude);
-      x += dx; 
+    let { x, fx }= this.state
+    // for (var i = 0; i <=count; i++){
+    //   fx.push(Math.sin(x) * amplitude);
+    //   x += dx; 
+    // }
+    fx.push(Math.sin(x) * amplitude)
+    console.log(fx.length, count)
+
+    if(fx.length >= count){
+      fx.shift();
     }
+    console.log('AFTER UNSHIFT', fx.length, count)
     this.setState({
-      x : x
+      x: x + dx,
+      fx: fx
     })
-    return fx; 
+    // return fx; 
   }
 
   render(){
     let { top, fx } = this.state;
-
+    console.log(fx);
     return(
       <div className="wave-container">
         <div className="buttons-container">
@@ -86,17 +103,18 @@ class SingleWave extends Component {
         </div>
         <div className='loader'>
           {
-
-
           // this.stackIncrement()
-            fx.reverse().map(function(y, index){
+            fx.map(function(y, index){
               return (
                 <div>
                   <div style={{
                     'top':y + top + 'vh',
-                    'background' : (index == 0) ? '#33ccff' : 'yellow'
+                    'background' : (index == count) ? '#33ccff' : 'yellow'
                   }}></div>
+
+                  
                 </div>
+                
               )
             })
           }
