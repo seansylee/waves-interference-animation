@@ -10,13 +10,20 @@ class SingleWave extends Component {
   state = {
     'top':30,
     fx:[],
-    x: 1,
+    x: 0,
     intervalId: null,
     pause: false 
   }
 
   componentDidMount = () => {
     console.log('WAVES MOUNTED ')
+    let fx = []
+    for(var i = 0; i <= count; i++){
+      fx.push(0);
+    }
+    this.setState({
+      fx:fx
+    })
     this.animate();
   }
 
@@ -102,9 +109,12 @@ class SingleWave extends Component {
                 <div>
                   <div style={{
                     'top':y + top + 'vh',
-                    'background' : (index == 0) ? '#33ccff' : 'yellow'
+                    'background' : (index == count) ? '#33ccff' : 'yellow'
                   }}></div>
+
+                  
                 </div>
+                
               )
             })
           }
