@@ -12,7 +12,7 @@ class SingleWave extends Component {
     fx:[],
     x: 0,
     intervalId: null,
-    pause: false 
+    pause: true 
   }
 
   componentDidMount = () => {
@@ -51,7 +51,7 @@ class SingleWave extends Component {
     //   }.bind(this),40) 
     // })
     this.setState({
-      intervalId: setInterval( () => this.calculate(dx, amplitude, count), 40)
+      intervalId: setInterval( () => this.calculate2(dx, amplitude, count), 40)
     })
   }
 
@@ -71,6 +71,31 @@ class SingleWave extends Component {
     }
   }
 
+  calculate2 = (dx, amplitude, count) => {
+    let { x, fx }= this.state;
+    let center = fx.length/2;
+    
+
+    // for(let i = center; i<= fx.length; i++){
+    //   let current = fx[i];
+    //   fx[i] = fx[i-1];
+    // }
+    let source =  Math.sin(x) * amplitude;
+
+    fx[center] = source;
+    for(let i = fx.length; i>= center; i--){
+      fx[i] = fx[i-1];
+    }
+    for(let j = center; j>=0; j--){
+      fx[j] = fx[j+1];
+    }
+    this.setState({
+      x: x + dx,
+      fx: fx
+    })
+    
+  }
+
   calculate = (dx, amplitude, count) => {
     let { x, fx }= this.state
     // for (var i = 0; i <=count; i++){
@@ -83,6 +108,7 @@ class SingleWave extends Component {
     if(fx.length >= count){
       fx.shift();
     }
+    //change x to time. 
     console.log('AFTER UNSHIFT', fx.length, count)
     this.setState({
       x: x + dx,
@@ -99,7 +125,7 @@ class SingleWave extends Component {
         <div className="buttons-container">
           <button onClick={()=>{clearInterval(this.state.intervalId)}}> Stop </button>
           <button onClick={()=>{this.animate()}}> Run </button>
-          <button onClick={()=>{this.setState({'fx':this.calculate(dx, amplitude, count)})}}> Increment </button>
+          <button onClick={()=>{this.setState({'fx':this.calculate2(dx, amplitude, count)})}}> Increment </button>
         </div>
         <div className='loader'>
           {
@@ -111,10 +137,7 @@ class SingleWave extends Component {
                     'top':y + top + 'vh',
                     'background' : (index == count) ? '#33ccff' : 'yellow'
                   }}></div>
-
-                  
-                </div>
-                
+               </div>
               )
             })
           }
