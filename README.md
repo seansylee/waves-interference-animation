@@ -1,6 +1,7 @@
 # Waves Simulator
 
 This wave simulator built on React depicts an animation of a single source in simple harmonic motion.
+The current working version can be viewed [here](https://elegant-hoover-109acc.netlify.com/)
 
 ## Getting Started
 
