@@ -83,6 +83,7 @@ The most crucial thing to note is that any changes to the state will trigger the
 ## Deployment
 
 Deployed using [**Netlify**](https://www.netlify.com/)
+
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/netlify-statuskit)
 
 ## Authors
