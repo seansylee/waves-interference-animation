@@ -82,7 +82,8 @@ The most crucial thing to note is that any changes to the state will trigger the
 
 ## Deployment
 
-_Currently under works, will be done soon!_
+Deployed using [**Netlify**](https://www.netlify.com/)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/netlify-statuskit)
 
 ## Authors
 
